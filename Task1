@@ -1,0 +1,68 @@
+#TSF GRIP Tasks
+#By Nanthitha B
+
+#Task-1
+
+#Importing the data
+
+interndata <- read.csv("C:/Users/nanth/OneDrive/Desktop/Data.csv")
+interndata
+
+## Plotting the given data
+
+plot(x = interndata$Hours, y = interndata$Scores, xlab = "Hours", ylab = "Scores", main = "Score of student by study Hours", col = "Red")
+
+## Linear regression
+
+interndata_regression <- lm(formula = Scores~Hours , data = interndata)
+plot(x = interndata$Hours, y = interndata$Scores, xlab = "Hours", ylab = "Scores", main = "Score of student by study Hours", col = "red")
+abline(interndata_regression, col= "Blue")
+
+summary(interndata_regression)
+
+## Splitting Data Into Test and Training data
+
+library(caTools) # package "caTools" is used for splitting the data
+
+split = sample.split(Y = interndata$Scores, SplitRatio = 0.75)
+training_set = subset(interndata, split == TRUE)
+test_set = subset(interndata, split==FALSE)
+
+training_set # checking the training data
+
+test_set# checking the test data
+
+## training the dataset
+
+result <- lm(formula = Scores~Hours, data = training_set)
+
+summary(result)
+
+result$coefficients
+
+pred <- predict(result, test_set)
+head(pred) #printing the predicted result
+
+head(test_set) # printing the head of test set to compare with predicted values
+
+
+##taking the head values of original test set
+
+tset <- head(training_set)
+tset
+
+##taking the head values of predicted set
+
+pset <- head(test_set)
+pset
+
+##Calculating Mean Absolute Error
+
+library(ie2misc)
+
+mae(pset$Hours, tset$Hours)
+
+#Step-8 What will be predicted score if a student studies for 9.25 hrs/ day?
+
+predicted_result <- predict(result, data.frame(Hours = 9.25))
+predicted_result
